@@ -4,7 +4,7 @@ namespace ConsoleApp.Conexion
 {
     public class ConexionET
     {
-        private readonly string cadena_conexion = "Server=localhost;Database=db_distribuidora_licores;Integrated Security=True;TrustServerCertificate=True;";
+        private readonly string cadena_conexion = "Server=localhost;Database=DISTRIBUIDORA_2;Trusted_Connection=True;";
 
         public void CargarProductos()
         {
@@ -29,7 +29,5 @@ namespace ConsoleApp.Conexion
                 Console.WriteLine($"{e.IdEmpleado} - {e.Nombres} {e.Apellidos} - {e.Email}");
             }
         }
-
-        
     }
 }
