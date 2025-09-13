@@ -16,21 +16,21 @@ namespace ConsoleApp.Conexion
             }
         }
 
-        // Aquí defines los DbSet según tus entidades reales
-        public DbSet<Producto>? Productos { get; set; }
-        public DbSet<Empleado>? Empleados { get; set; }
-        public DbSet<Cliente>? Clientes { get; set; }
-        public DbSet<Proveedor>? Proveedores { get; set; }
-        public DbSet<PedidoVenta>? PedidosVentas { get; set; }
-        public DbSet<PedidoCompra>? PedidosCompras { get; set; }
-        public DbSet<CategoriaProducto>? CategoriasProducto { get; set; }
-        public DbSet<Impuesto>? Impuestos { get; set; }
-        public DbSet<Almacen>? Almacenes { get; set; }
-        public DbSet<InventarioProducto>? InventariosProductos { get; set; }
-        public DbSet<MovimientoProducto>? MovimientosProductos { get; set; }
-        public DbSet<DetallePedidoVenta>? DetallesPedidoVentas { get; set; }
+        
+        public DbSet<Productos>? Productos { get; set; }
+        public DbSet<Empleados>? Empleados { get; set; }
+        public DbSet<Clientes>? Clientes { get; set; }
+        public DbSet<Proveedores>? Proveedores { get; set; }
+        public DbSet<PedidosVentas>? PedidosVentas { get; set; }
+        public DbSet<PedidosCompras>? PedidosCompras { get; set; }
+        public DbSet<CategoriasProductos>? CategoriasProductos { get; set; }
+        public DbSet<Impuestos>? Impuestos { get; set; }
+        public DbSet<Almacenes>? Almacenes { get; set; }
+        public DbSet<InventariosProductos>? InventariosProductos { get; set; }
+        public DbSet<MovimientosProductos>? MovimientosProductos { get; set; }
+        public DbSet<DetallesPedidosVentas>? DetallesPedidoVentas { get; set; }
         public DbSet<DetallePedidoCompra>? DetallesPedidosCompras { get; set; }
-        public DbSet<Pago>? Pagos { get; set; }
-        public DbSet<Rol>? Roles { get; set; }
+        public DbSet<Pagos>? Pagos { get; set; }
+        public DbSet<Roles>? Roles { get; set; }
     }
 }
