@@ -1,4 +1,3 @@
-// Models/Role.cs
 public class Roles
 {
     public int IdRol { get; set; }
@@ -8,7 +7,6 @@ public class Roles
     public ICollection<Empleado> Empleados { get; set; } = new List<Empleado>();
 }
 
-// Models/Empleado.cs
 public class Empleados
 {
     public int IdEmpleado { get; set; }
@@ -23,7 +21,6 @@ public class Empleados
     public Role Rol { get; set; } = null!;
 }
 
-// Models/Proveedor.cs
 public class Proveedores
 {
     public int IdProveedor { get; set; }
@@ -48,7 +45,7 @@ public class Clientes
 }
 
 // Models/CategoriaProducto.cs
-public class CategoriaProductos
+public class CategoriasProductos
 {
     public int IdCategoria { get; set; }
     public string Nombre { get; set; } = null!;
@@ -93,8 +90,7 @@ public class Almacenes
     public bool EsPrincipal { get; set; } = false;
 }
 
-// Models/InventarioProducto.cs
-public class InventarioProductos
+public class InventariosProductos
 {
     public int IdInventarioProd { get; set; }
     public int IdProducto { get; set; }
@@ -105,8 +101,7 @@ public class InventarioProductos
     public Almacen Almacen { get; set; } = null!;
 }
 
-// Models/MovimientoProducto.cs
-public class MovimientoProductos
+public class MovimientosProductos
 {
     public int IdMovProd { get; set; }
     public int IdProducto { get; set; }
@@ -120,8 +115,7 @@ public class MovimientoProductos
     public Almacen Almacen { get; set; } = null!;
 }
 
-// Models/PedidoCompra.cs
-public class PedidoCompras
+public class PedidosCompras
 {
     public int IdPedidoCompra { get; set; }
     public string Numero { get; set; } = null!;
@@ -134,8 +128,7 @@ public class PedidoCompras
     public Empleado? Empleado { get; set; }
 }
 
-// Models/DetallePedidoCompra.cs
-public class DetallePedidoCompras
+public class DetallesPedidosCompras
 {
     public int IdDetallePC { get; set; }
     public int IdPedidoCompra { get; set; }
@@ -147,8 +140,7 @@ public class DetallePedidoCompras
     public Producto Producto { get; set; } = null!;
 }
 
-// Models/PedidoVenta.cs
-public class PedidoVentas
+public class PedidosVentas
 {
     public int IdPedidoVenta { get; set; }
     public string Numero { get; set; } = null!;
@@ -161,8 +153,7 @@ public class PedidoVentas
     public Empleado? Empleado { get; set; }
 }
 
-// Models/DetallePedidoVenta.cs
-public class DetallePedidoVentas
+public class DetallesPedidosVentas
 {
     public int IdDetallePV { get; set; }
     public int IdPedidoVenta { get; set; }
@@ -176,7 +167,6 @@ public class DetallePedidoVentas
     public Impuesto? Impuesto { get; set; }
 }
 
-// Models/Pago.cs
 public class Pagos
 {
     public int IdPago { get; set; }
@@ -188,3 +178,5 @@ public class Pagos
 
     public PedidoVenta PedidoVenta { get; set; } = null!;
 }
+
+
