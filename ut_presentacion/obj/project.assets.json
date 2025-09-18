@@ -4804,23 +4804,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\usuario1\\.nuget\\packages\\": {},
+    "C:\\Users\\isara\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\ut_presentacion\\ut_presentacion.csproj",
+      "projectUniqueName": "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\ut_presentacion\\ut_presentacion.csproj",
       "projectName": "ut_presentacion",
-      "projectPath": "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\ut_presentacion\\ut_presentacion.csproj",
-      "packagesPath": "C:\\Users\\usuario1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\ut_presentacion\\obj\\",
+      "projectPath": "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\ut_presentacion\\ut_presentacion.csproj",
+      "packagesPath": "C:\\Users\\isara\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\ut_presentacion\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\usuario1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\isara\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4829,18 +4829,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\lib_dominio\\lib_dominio.csproj": {
-              "projectPath": "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\lib_dominio\\lib_dominio.csproj"
+            "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\lib_dominio\\lib_dominio.csproj": {
+              "projectPath": "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\lib_dominio\\lib_dominio.csproj"
             },
-            "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\lib_repositorios\\lib_repositorios.csproj": {
-              "projectPath": "C:\\Users\\usuario1\\OneDrive\\Documentos\\2025 - 2\\Programacion de software\\Proyecto\\Nueva carpeta\\lib_repositorios\\lib_repositorios.csproj"
+            "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\lib_repositorios\\lib_repositorios.csproj": {
+              "projectPath": "C:\\Users\\isara\\source\\repos\\KepperCommander\\DistruidoraDeLicores\\lib_repositorios\\lib_repositorios.csproj"
             }
           }
         }
@@ -4898,7 +4897,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
