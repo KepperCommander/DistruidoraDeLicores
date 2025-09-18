@@ -11,3 +11,16 @@ C:\Users\isara\source\repos\KepperCommander\DistruidoraDeLicores\lib_dominio\obj
 C:\Users\isara\source\repos\KepperCommander\DistruidoraDeLicores\lib_dominio\obj\Debug\net8.0\lib_dominio.pdb
 C:\Users\isara\source\repos\KepperCommander\DistruidoraDeLicores\lib_dominio\obj\Debug\net8.0\ref\lib_dominio.dll
 C:\Users\isara\source\repos\KepperCommander\DistruidoraDeLicores\lib_dominio\obj\Debug\net8.0\lib_dominio.csproj.AssemblyReference.cache
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\bin\Debug\net8.0\lib_dominio.deps.json
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\bin\Debug\net8.0\lib_dominio.dll
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\bin\Debug\net8.0\lib_dominio.pdb
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.csproj.AssemblyReference.cache
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.AssemblyInfoInputs.cache
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.AssemblyInfo.cs
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.csproj.CoreCompileInputs.cache
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.sourcelink.json
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.dll
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\refint\lib_dominio.dll
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\lib_dominio.pdb
+C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_dominio\obj\Debug\net8.0\ref\lib_dominio.dll

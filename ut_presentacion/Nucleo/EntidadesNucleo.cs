@@ -11,14 +11,14 @@ namespace ut_presentacion.Nucleo
 {
     public static class EntidadesNucleo
     {
-        public static Roles? Roles()
+        /*public static Roles? Roles()
         {
             return new Roles
             {
                 Nombre = "Administrador",
                 EsActivo = true
             };
-        }
+        }*/
 
         public static Empleados? Empleados()
         {
@@ -34,7 +34,7 @@ namespace ut_presentacion.Nucleo
             };
         }
 
-        public static Proveedores? Proveedores()
+        /*public static Proveedores? Proveedores()
         {
             return new Proveedores
             {
@@ -183,6 +183,6 @@ namespace ut_presentacion.Nucleo
                 Medio = "EFECTIVO",
                 Referencia = "Caja001"
             };
-        }
+        }*/
     }
 }
