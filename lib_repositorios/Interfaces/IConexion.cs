@@ -14,6 +14,7 @@ namespace lib_repositorios.Interfaces
         string? StringConexion { get; set; }
 
         DbSet<Empleados>? Empleados { get; set; }
+        DbSet<Almacenes>? Almacenes { get; set; }
 
         EntityEntry<T> Entry<T>(T entity) where T : class;
         int SaveChanges();

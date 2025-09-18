@@ -34,6 +34,14 @@ namespace ut_presentacion.Nucleo
             };
         }
 
+        public static Almacenes? Almacenes()
+        {
+            var entidad = new Almacenes();
+            entidad.Nombre = "Pruebas-";
+
+            return entidad;
+        }
+
         /*public static Proveedores? Proveedores()
         {
             return new Proveedores

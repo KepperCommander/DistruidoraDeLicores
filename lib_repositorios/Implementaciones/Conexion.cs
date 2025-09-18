@@ -23,5 +23,6 @@ namespace lib_repositorios.Implementaciones
         }
 
         public DbSet<Empleados>? Empleados { get; set; }
+        public DbSet<Almacenes>? Almacenes { get; set; }
     }
 }
