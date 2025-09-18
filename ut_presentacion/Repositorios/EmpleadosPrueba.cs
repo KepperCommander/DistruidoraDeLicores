@@ -1,28 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using lib_dominio.Entidades;
-using lib_repositorios.Implementaciones;
-using lib_repositorios.Interfaces;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
-using ut_presentacion.Nucleo;
+using Microsoft.EntityFrameworkCore.Storage;
+
+using lib_dominio.Entidades;
+using lib_repositorios.Interfaces;
+using lib_repositorios.Implementaciones;
+
+using ut_presentacion.Nucleo; // Configuracion y (opcional) EntidadesNucleo
 
 namespace ut_presentacion.Repositorios
 {
     [TestClass]
     public class EmpleadosPrueba
     {
-        private readonly IConexion? iConexion;
-        private List<Empleados>? lista;
+        private Conexion ctx = default!;
+        private IDbContextTransaction? trx;
         private Empleados? entidad;
 
-        public EmpleadosPrueba()
+        public TestContext TestContext { get; set; } = default!;
+
+        [TestInitialize]
+        public void SetUp()
         {
-            iConexion = new Conexion();
-            iConexion.StringConexion =
-                Configuracion.ObtenerValor("StringConexion"); // debe apuntar a DISTRIBUIDORA_2
+            // Configura la conexión a la BD de TU entorno (DISTRIBUIDORA_2)
+            ctx = new Conexion
+            {
+                StringConexion = Configuracion.ObtenerValor("StringConexion") // debe apuntar a DISTRIBUIDORA_2
+            };
+
+            // Sanity checks de arranque
+            Assert.IsTrue(ctx.Database.CanConnect(), "No se puede conectar: " + ctx.Database.GetConnectionString());
+            Assert.IsNotNull(ctx.Empleados, "DbSet Empleados es null en el DbContext.");
+
+            // Crea el esquema si estás usando una BD de pruebas vacía
+            // (en productivo normalmente NO se usa EnsureCreated)
+            // ctx.Database.EnsureCreated();
+
+            // Ejecutar el test dentro de una transacción y revertir al final
+            trx = ctx.Database.BeginTransaction();
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            try { trx?.Rollback(); } catch { /* ignore */ }
+            try { trx?.Dispose(); } catch { /* ignore */ }
+            try { ctx?.Dispose(); } catch { /* ignore */ }
         }
 
         [TestMethod]
@@ -30,62 +56,94 @@ namespace ut_presentacion.Repositorios
         {
             try
             {
-                // sanity checks
-                Assert.IsNotNull(iConexion, "iConexion es null.");
-                var ctx = (Conexion)iConexion!;
-                Assert.IsTrue(ctx.Database.CanConnect(), "No se puede conectar a la BD: " + ctx.Database.GetConnectionString());
-                Assert.IsNotNull(iConexion!.Empleados, "DbSet Empleados no está configurado en el DbContext (es null).");
-
+                // Paso 1: Guardar
                 Assert.IsTrue(Guardar(), "Guardar() falló");
+
+                // Paso 2: Modificar
                 Assert.IsTrue(Modificar(), "Modificar() falló");
+
+                // Paso 3: Listar
                 Assert.IsTrue(Listar(), "Listar() falló");
             }
             catch (Exception ex)
             {
-                // muestra la causa real en el panel de pruebas
-                Assert.Fail(ex.GetType().Name + ": " + (ex.InnerException?.Message ?? ex.Message));
-            }
-            finally
-            {
-                try { Borrar(); } catch { /* cleanup best-effort */ }
+                // Mostrar error completo (mensaje + stack + inner exceptions)
+                Assert.Fail(ex.ToString());
             }
         }
 
-
-        public bool Guardar()
+        private bool Guardar()
         {
-            this.entidad = EntidadesNucleo.Empleados()!;
-            this.iConexion!.Empleados!.Add(this.entidad);
-            this.iConexion!.SaveChanges();
-            // aquí EF ya devuelve IdEmpleado asignado
-            return this.entidad.IdEmpleado > 0;
+            // Usa tu factoría si ya la tienes; si no, crea una entidad válida aquí
+            entidad = EntidadesNucleo.Empleados() ?? EmpleadoValido();
+
+            // Asegura datos que cumplan tu esquema SQL:
+            // - IdRol NOT NULL y existente (tu script inserta 5 roles, usa 1..5)
+            if (entidad.IdRol <= 0) entidad.IdRol = 1;
+
+            // - Email UNIQUE (evitar colisiones)
+            if (string.IsNullOrWhiteSpace(entidad.Email))
+                entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local";
+
+            ctx.Empleados!.Add(entidad);
+            var afectados = ctx.SaveChanges();
+
+            TestContext.WriteLine($"INSERT IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
+
+            Assert.IsTrue(afectados >= 1, "No se insertó ningún registro.");
+            Assert.IsTrue(entidad.IdEmpleado > 0, "EF no asignó IdEmpleado.");
+
+            return true;
         }
 
-        public bool Modificar()
+        private bool Modificar()
         {
-            entidad!.Apellidos = entidad.Apellidos + " Actualizado";
+            Assert.IsNotNull(entidad, "No hay entidad cargada para modificar.");
+
+            entidad!.Apellidos += " Actualizado";
             entidad.Activo = !entidad.Activo;
 
-            var entry = iConexion!.Entry(entidad);   // esto ya la adjunta si no lo está
-            entry.State = EntityState.Modified;
+            // La entidad está trackeada por el mismo DbContext que la insertó.
+            // No es necesario forzar EntityState.Modified.
+            var afectados = ctx.SaveChanges();
 
-            iConexion.SaveChanges();
+            TestContext.WriteLine($"UPDATE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
+            Assert.IsTrue(afectados >= 1, "No se actualizó ningún registro.");
+
             return true;
         }
 
-
-        public bool Listar()
+        private bool Listar()
         {
-            this.lista = this.iConexion!.Empleados!.ToList();
-            return this.lista.Count > 0;
+            List<Empleados> lista = ctx.Empleados!.AsNoTracking().ToList();
+            TestContext.WriteLine($"LISTAR total = {lista.Count}");
+            return lista.Count > 0;
         }
 
-        public bool Borrar()
+        // Limpieza manual si alguna vez quieres borrar el registro explícitamente.
+        // En esta versión no es necesario porque hacemos ROLLBACK en TestCleanup.
+        private bool Borrar()
         {
-            if (this.entidad is null) return true;
-            this.iConexion!.Empleados!.Remove(this.entidad);
-            this.iConexion!.SaveChanges();
-            return true;
+            if (entidad is null) return true;
+            ctx.Empleados!.Remove(entidad);
+            var afectados = ctx.SaveChanges();
+            TestContext.WriteLine($"DELETE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
+            return afectados >= 1;
+        }
+
+        // Fábrica mínima para garantizar compatibilidad con el esquema SQL
+        private static Empleados EmpleadoValido()
+        {
+            return new Empleados
+            {
+                Nombres = "EmpleadoPrueba",
+                Apellidos = "Unit",
+                Email = $"empleado.{Guid.NewGuid():N}@prueba.local",
+                Telefono = "3000000000",
+                IdRol = 1,                // Debe existir en Roles
+                FechaIngreso = DateTime.Today,
+                Activo = true
+            };
         }
     }
 }

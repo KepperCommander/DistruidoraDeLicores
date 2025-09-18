@@ -24,13 +24,16 @@ namespace ut_presentacion.Nucleo
         {
             return new Empleados
             {
-                Nombres = "Juan",
-                Apellidos = "Pruebas-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
-                Email = $"empleado_{Guid.NewGuid():N}@empresa.com", // único
+                Nombres = "EmpleadoPrueba",
+                Apellidos = "Unit",
+                // Siembra por defecto 5 roles (1..5) en tu script; usa uno existente
+                IdRol = 1,
+                // Evita choque con UNIQUE
+                Email = $"empleado.{Guid.NewGuid():N}@prueba.local",
                 Telefono = "3000000000",
-                IdRol = 1,  // debe existir en Roles
-                FechaIngreso = DateTime.Today,
-                Activo = true
+                Activo = true,
+                // FechaIngreso tiene DEFAULT en SQL; puedes enviar DateTime.Today sin problema
+                FechaIngreso = DateTime.Today
             };
         }
 

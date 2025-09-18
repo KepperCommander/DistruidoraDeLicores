@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lib_dominio.Entidades
+{
+    public class MovimientosProductos
+    {
+        public int IdMovProd { get; set; }
+        public int IdProducto { get; set; }
+        public int IdAlmacen { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
+        public string Tipo { get; set; } = null!;
+        public int CantidadUnidades { get; set; }
+        public string? Referencia { get; set; }
+
+        public Productos Productos { get; set; } = null!;
+        public Almacenes Almacenes { get; set; } = null!;
+    }
+}
