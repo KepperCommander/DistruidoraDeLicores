@@ -11,14 +11,14 @@ namespace ut_presentacion.Nucleo
 {
     public static class EntidadesNucleo
     {
-        /*public static Roles? Roles()
+        public static Roles? Roles()
         {
             return new Roles
             {
                 Nombre = "Administrador",
                 EsActivo = true
             };
-        }*/
+        }
 
         public static Empleados? Empleados()
         {
@@ -39,13 +39,15 @@ namespace ut_presentacion.Nucleo
 
         public static Almacenes? Almacenes()
         {
-            var entidad = new Almacenes();
-            entidad.Nombre = "Pruebas-";
-
-            return entidad;
+            return new Almacenes
+            {
+                Nombre = "Bodega Central",
+                Direccion = "Zona Industrial #1",
+                EsPrincipal = true
+            };
         }
 
-        /*public static Proveedores? Proveedores()
+        public static Proveedores? Proveedores()
         {
             return new Proveedores
             {
@@ -104,15 +106,7 @@ namespace ut_presentacion.Nucleo
             };
         }
 
-        public static Almacenes? Almacenes()
-        {
-            return new Almacenes
-            {
-                Nombre = "Bodega Central",
-                Direccion = "Zona Industrial #1",
-                EsPrincipal = true
-            };
-        }
+        
 
         public static InventariosProductos? InventarioProductos()
         {
@@ -160,9 +154,9 @@ namespace ut_presentacion.Nucleo
             };
         }
 
-        public static PedidosVentas? PedidoVentas()
+        public static PedidoVentas? PedidoVentas()
         {
-            return new PedidosVentas
+            return new PedidoVentas
             {
                 Numero = "PV001",
                 IdCliente = 1,
@@ -194,6 +188,6 @@ namespace ut_presentacion.Nucleo
                 Medio = "EFECTIVO",
                 Referencia = "Caja001"
             };
-        }*/
+        }
     }
 }

@@ -1,48 +1,41 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 using lib_dominio.Entidades;
-using lib_repositorios.Interfaces;
 using lib_repositorios.Implementaciones;
-
-using ut_presentacion.Nucleo; // Configuracion y (opcional) EntidadesNucleo
+using ut_presentacion.Nucleo;
 
 namespace ut_presentacion.Repositorios
 {
     [TestClass]
-    public class EmpleadosPrueba
+    public class AlmacenesPrueba
     {
         private Conexion ctx = default!;
         private IDbContextTransaction? trx;
-        private Empleados? entidad;
+        private Almacenes? entidad;
 
         public TestContext TestContext { get; set; } = default!;
 
         [TestInitialize]
         public void SetUp()
         {
-            // Configura la conexión a la BD de TU entorno (DISTRIBUIDORA_2)
             ctx = new Conexion
             {
-                StringConexion = Configuracion.ObtenerValor("StringConexion") // debe apuntar a DISTRIBUIDORA_2
+                StringConexion = Configuracion.ObtenerValor("StringConexion") // DISTRIBUIDORA_2
             };
 
-            // Sanity checks de arranque
             Assert.IsTrue(ctx.Database.CanConnect(), "No se puede conectar: " + ctx.Database.GetConnectionString());
-            Assert.IsNotNull(ctx.Empleados, "DbSet Empleados es null en el DbContext.");
+            Assert.IsNotNull(ctx.Almacenes, "DbSet Almacenes es null en el DbContext.");
 
-            // Crea el esquema si estás usando una BD de pruebas vacía
-            // (en productivo normalmente NO se usa EnsureCreated)
-            // ctx.Database.EnsureCreated();
-
-            // Ejecutar el test dentro de una transacción y revertir al final
+            // Todo dentro de transacción para no dejar basura (rollback en TestCleanup)
             trx = ctx.Database.BeginTransaction();
         }
-       
 
         [TestCleanup]
         public void TearDown()
@@ -51,7 +44,6 @@ namespace ut_presentacion.Repositorios
             try { trx?.Dispose(); } catch { /* ignore */ }
             try { ctx?.Dispose(); } catch { /* ignore */ }
         }
-
 
         [TestMethod]
         public void Ejecutar()
@@ -64,44 +56,38 @@ namespace ut_presentacion.Repositorios
             }
             catch (Exception ex)
             {
-                // mostrar el error
                 Assert.Fail(ex.ToString());
             }
         }
 
         private bool Guardar()
         {
-           
-            entidad = EntidadesNucleo.Empleados() ?? EmpleadoValido();
+            entidad = EntidadesNucleo.Almacenes() ?? AlmacenValido();
 
-            
-            if (entidad.IdRol <= 0) entidad.IdRol = 1;
+            // Forzar nombre único para no chocar con el UNIQUE del script
+            entidad.Nombre = $"Bodega-{Guid.NewGuid():N}".Substring(0, 20);
 
-            
-            if (string.IsNullOrWhiteSpace(entidad.Email))
-                entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local";
-
-            ctx.Empleados!.Add(entidad);
+            ctx.Almacenes!.Add(entidad);
             var afectados = ctx.SaveChanges();
 
-            TestContext.WriteLine($"INSERT IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
-
+            TestContext.WriteLine($"INSERT IdAlmacen = {entidad.IdAlmacen}, filas afectadas = {afectados}");
             Assert.IsTrue(afectados >= 1, "No se insertó ningún registro.");
-            Assert.IsTrue(entidad.IdEmpleado > 0, "EF no asignó IdEmpleado.");
+            Assert.IsTrue(entidad.IdAlmacen > 0, "EF no asignó IdAlmacen.");
 
             return true;
         }
+
 
         private bool Modificar()
         {
             Assert.IsNotNull(entidad, "No hay entidad cargada para modificar.");
 
-            entidad!.Apellidos += " Actualizado";
-            entidad.Activo = !entidad.Activo;
+            entidad!.Direccion = "Zona Industrial #1 - Mod";
+            entidad.EsPrincipal = !entidad.EsPrincipal;
 
             var afectados = ctx.SaveChanges();
 
-            TestContext.WriteLine($"UPDATE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
+            TestContext.WriteLine($"UPDATE IdAlmacen = {entidad.IdAlmacen}, filas afectadas = {afectados}");
             Assert.IsTrue(afectados >= 1, "No se actualizó ningún registro.");
 
             return true;
@@ -109,32 +95,32 @@ namespace ut_presentacion.Repositorios
 
         private bool Listar()
         {
-            List<Empleados> lista = ctx.Empleados!.AsNoTracking().ToList();
+            List<Almacenes> lista = ctx.Almacenes!.AsNoTracking().ToList();
             TestContext.WriteLine($"LISTAR total = {lista.Count}");
             return lista.Count > 0;
         }
 
-
+        // (No se usa porque hacemos ROLLBACK, pero te lo dejo por si lo quieres invocar)
         private bool Borrar()
         {
             if (entidad is null) return true;
-            ctx.Empleados!.Remove(entidad);
+            ctx.Almacenes!.Remove(entidad);
             var afectados = ctx.SaveChanges();
-            TestContext.WriteLine($"DELETE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
+            TestContext.WriteLine($"DELETE IdAlmacen = {entidad.IdAlmacen}, filas afectadas = {afectados}");
             return afectados >= 1;
         }
 
-        private static Empleados EmpleadoValido()
+        // Fábrica mínima consistente con tu esquema SQL:
+        //  - Nombre: NOT NULL + UNIQUE
+        //  - Direccion: NULL
+        //  - EsPrincipal: NOT NULL (DEFAULT 0)
+        private static Almacenes AlmacenValido()
         {
-            return new Empleados
+            return new Almacenes
             {
-                Nombres = "EmpleadoPrueba",
-                Apellidos = "Unit",
-                Email = $"empleado.{Guid.NewGuid():N}@prueba.local",
-                Telefono = "3000000000",
-                IdRol = 1,                
-                FechaIngreso = DateTime.Today,
-                Activo = true
+                Nombre = $"Bodega-{Guid.NewGuid():N}".Substring(0, 20),
+                Direccion = "Zona Industrial #1",
+                EsPrincipal = false
             };
         }
     }
