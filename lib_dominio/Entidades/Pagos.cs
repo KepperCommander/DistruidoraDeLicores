@@ -15,7 +15,7 @@ namespace lib_dominio.Entidades
         public string Medio { get; set; } = null!;
         public string? Referencia { get; set; }
 
-        public PedidoVentas PedidosVentas { get; set; } = null!;
+        public PedidosVentas PedidosVentas { get; set; } = null!;
     }
 
 }

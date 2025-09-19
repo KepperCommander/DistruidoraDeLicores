@@ -15,5 +15,7 @@ namespace lib_dominio.Entidades
         public string? Telefono { get; set; }
         public string? Direccion { get; set; }
         public bool Activo { get; set; } = true;
+
+        public ICollection<PedidosVentas> PedidosVentas { get; set; } = new List<PedidosVentas>();
     }
 }

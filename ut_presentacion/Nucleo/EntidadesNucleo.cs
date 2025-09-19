@@ -154,9 +154,9 @@ namespace ut_presentacion.Nucleo
             };
         }
 
-        public static PedidoVentas? PedidoVentas()
+        public static PedidosVentas? PedidoVentas()
         {
-            return new PedidoVentas
+            return new PedidosVentas
             {
                 Numero = "PV001",
                 IdCliente = 1,

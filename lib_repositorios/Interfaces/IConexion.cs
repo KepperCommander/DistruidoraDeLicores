@@ -13,7 +13,7 @@ namespace lib_repositorios.Interfaces
 
         DbSet<Productos>? Productos { get; set; }
         DbSet<PedidosCompras>? PedidosCompras { get; set; }     
-        DbSet<PedidoVentas>? PedidosVentas { get; set; }
+        DbSet<PedidosVentas>? PedidosVentas { get; set; }
 
         DbSet<Impuestos>? Impuestos { get; set; }
 

@@ -4,18 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lib_dominio.Entidades
-{
-    public class PedidoVentas
+    namespace lib_dominio.Entidades
+    {
+    public class PedidosVentas
     {
         public int IdPedidoVenta { get; set; }
-        public string Numero { get; set; } = null!;
+        public string Numero { get; set; } = string.Empty;
         public int IdCliente { get; set; }
         public int? IdEmpleado { get; set; }
         public DateTime Fecha { get; set; } = DateTime.Now;
         public string Estado { get; set; } = "ABIERTA";
 
-        public Clientes Clientes { get; set; } = null!;
-        public Empleados? Empleados { get; set; }
+       
+        public Clientes Cliente { get; set; } = null!;
+        public Empleados? Empleado { get; set; }
     }
 }
+
+

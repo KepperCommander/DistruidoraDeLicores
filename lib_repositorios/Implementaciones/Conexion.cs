@@ -33,7 +33,7 @@ namespace lib_repositorios.Implementaciones
         public DbSet<MovimientosProductos>? MovimientosProductos { get; set; }
         public DbSet<PedidosCompras>? PedidosCompras { get; set; }
         public DbSet<DetallesPedidosCompras>? DetallesPedidosCompras { get; set; }
-        public DbSet<PedidoVentas>? PedidosVentas { get; set; }
+        public DbSet<PedidosVentas>? PedidosVentas { get; set; }
         public DbSet<DetallesPedidosVentas>? DetallesPedidosVentas { get; set; }
         public DbSet<Pagos>? Pagos { get; set; }
 
@@ -137,36 +137,28 @@ namespace lib_repositorios.Implementaciones
                 e.HasKey(x => x.IdProducto);
                 e.Property(x => x.IdProducto).ValueGeneratedOnAdd();
 
-                // Si tu clase tiene 'Codigo':
                 e.Property(x => x.Codigo).IsRequired().HasMaxLength(40);
                 e.HasIndex(x => x.Codigo).IsUnique();
-
-                // Si en tu clase NO existe 'Codigo' y usas 'SKU', mapea así:
-                // e.Property(x => x.SKU).HasColumnName("Codigo").IsRequired().HasMaxLength(40);
-                // e.HasIndex(x => x.SKU).IsUnique();
-
                 e.Property(x => x.Nombre).IsRequired().HasMaxLength(150);
-                e.Property(x => x.IdCategoria).IsRequired();
                 e.Property(x => x.VolumenML).IsRequired();
                 e.Property(x => x.GradAlcoholico).HasColumnType("decimal(5,2)").IsRequired();
                 e.Property(x => x.PrecioLista).HasColumnType("decimal(12,2)").IsRequired();
                 e.Property(x => x.Activo).IsRequired();
 
-                // Mapea explícitamente las FKs del script
-                e.HasOne<CategoriasProductos>()
-                 .WithMany()
-                 .HasForeignKey(x => x.IdCategoria)
+                // Relación con CategoriasProductos (usa la colección explícita)
+                e.HasOne(p => p.Categoria)
+                 .WithMany(c => c.Productos)
+                 .HasForeignKey(p => p.IdCategoria)
                  .HasConstraintName("FK_Prod_Cat");
 
-                e.HasOne<Impuestos>()
-                 .WithMany()
-                 .HasForeignKey(x => x.IdImpuesto)
+                // Relación con Impuestos (usa la colección explícita)
+                e.HasOne(p => p.Impuesto)
+                 .WithMany(i => i.Productos)
+                 .HasForeignKey(p => p.IdImpuesto)
                  .HasConstraintName("FK_Prod_Imp");
-
-                // Limpia posibles sombras que ya te aparecieron
-                e.Ignore("CategoriasProductosIdCategoria");
-                e.Ignore("ImpuestosIdImpuesto");
             });
+
+
 
 
 
@@ -246,7 +238,8 @@ namespace lib_repositorios.Implementaciones
             });
 
 
-           
+
+            // ===== DetallesPedidosCompras =====
             model.Entity<DetallesPedidosCompras>(e =>
             {
                 e.ToTable("DetallesPedidosCompras", "dbo");
@@ -255,23 +248,29 @@ namespace lib_repositorios.Implementaciones
 
                 e.Property(x => x.Cantidad).IsRequired();
                 e.Property(x => x.PrecioUnitario).HasColumnType("decimal(12,2)").IsRequired();
-                e.HasCheckConstraint("CK_DPC_Cantidad", "[Cantidad] > 0");
-                e.HasCheckConstraint("CK_DPC_Precio", "[PrecioUnitario] >= 0");
 
-                e.HasOne<PedidosCompras>()
-                 .WithMany()
-                 .HasForeignKey(x => x.IdPedidoCompra)
+                // Enlaza la navegación PedidoCompra con la FK REAL IdPedidoCompra
+                e.HasOne(d => d.PedidoCompra)      // (tipo PedidosCompras o PedidoCompras, según tu clase)
+                 .WithMany()                       // o .WithMany(pc => pc.Detalles) si agregas la colección
+                 .HasForeignKey(d => d.IdPedidoCompra)
                  .HasConstraintName("FK_DPC_PC");
 
-                e.HasOne<Productos>()
-                 .WithMany()
-                 .HasForeignKey(x => x.IdProducto)
+                // Enlaza la navegación Producto con la FK REAL IdProducto
+                e.HasOne(d => d.Producto)
+                 .WithMany()                       // o .WithMany(p => p.DetallesPedidosCompras) si defines colección
+                 .HasForeignKey(d => d.IdProducto)
                  .HasConstraintName("FK_DPC_Prod");
 
+                // Solo si antes probaste cosas y quedaron sombras, limpia una vez:
+                e.Ignore("PedidosComprasIdPedidoCompra");
+                e.Ignore("ProductosIdProducto");
+                e.Ignore("PedidoComprasIdPedidoCompra"); // por si el tipo se llama distinto
             });
 
-           
-            model.Entity<PedidoVentas>(e =>
+
+            // ===== PedidosVentas =====
+            // PedidosVentas
+            model.Entity<PedidosVentas>(e =>
             {
                 e.ToTable("PedidosVentas", "dbo");
                 e.HasKey(x => x.IdPedidoVenta);
@@ -279,26 +278,24 @@ namespace lib_repositorios.Implementaciones
 
                 e.Property(x => x.Numero).IsRequired().HasMaxLength(30);
                 e.HasIndex(x => x.Numero).IsUnique();
-                e.Property(x => x.Fecha).IsRequired();
                 e.Property(x => x.Estado).IsRequired().HasMaxLength(20);
-                e.HasCheckConstraint("CK_PV_Estado", "[Estado] IN ('ABIERTA','FACTURADA','ENVIADA','CERRADA','ANULADA')");
 
-                e.HasOne<Clientes>()
-                    .WithMany()
-                    .HasForeignKey(x => x.IdCliente)
-                    .HasConstraintName("FK_PV_Cliente");
+                // Relación con Clientes usando la colección inversa
+                e.HasOne(x => x.Cliente)
+                 .WithMany(c => c.PedidosVentas)        // <— importante
+                 .HasForeignKey(x => x.IdCliente)
+                 .HasConstraintName("FK_PV_Cliente");
 
-                e.HasOne<Empleados>()
-                    .WithMany()
-                    .HasForeignKey(x => x.IdEmpleado)
-                    .HasConstraintName("FK_PV_Emp");
-
-                e.Ignore("ClientesIdCliente");
-                e.Ignore("EmpleadosIdEmpleado");
+                // Relación con Empleados usando la colección inversa (si existe)
+                e.HasOne(x => x.Empleado)
+                 .WithMany(emp => emp.PedidosVentas)    // <— importante
+                 .HasForeignKey(x => x.IdEmpleado)
+                 .HasConstraintName("FK_PV_Emp");
             });
 
 
-           
+
+            // ===== DetallesPedidosVentas =====
             model.Entity<DetallesPedidosVentas>(e =>
             {
                 e.ToTable("DetallesPedidosVentas", "dbo");
@@ -308,23 +305,26 @@ namespace lib_repositorios.Implementaciones
                 e.Property(x => x.Cantidad).IsRequired();
                 e.Property(x => x.PrecioUnitario).HasColumnType("decimal(12,2)").IsRequired();
 
-                e.HasOne<PedidoVentas>()
-                 .WithMany()
+                e.HasOne(x => x.PedidosVenta)
+                 .WithMany() // o .WithMany(p => p.Detalles) si agregas la colección en PedidosVentas
                  .HasForeignKey(x => x.IdPedidoVenta)
                  .HasConstraintName("FK_DPV_PV");
 
-                e.HasOne<Productos>()
+                e.HasOne(x => x.Producto)
                  .WithMany()
                  .HasForeignKey(x => x.IdProducto)
                  .HasConstraintName("FK_DPV_Prod");
 
-                e.HasOne<Impuestos>()
+                e.HasOne(x => x.Impuesto)
                  .WithMany()
                  .HasForeignKey(x => x.IdImpuesto)
                  .HasConstraintName("FK_DPV_Imp");
             });
 
-           
+
+
+
+
             model.Entity<Pagos>(e =>
             {
                 e.ToTable("Pagos", "dbo");
@@ -337,7 +337,7 @@ namespace lib_repositorios.Implementaciones
                 e.HasCheckConstraint("CK_Pagos_Monto", "[Monto] > 0");
                 e.HasCheckConstraint("CK_Pagos_Medio", "[Medio] IN ('EFECTIVO','TRANSFERENCIA','TARJETA','OTRO')");
 
-                e.HasOne<PedidoVentas>()
+                e.HasOne<PedidosVentas>()
                  .WithMany()
                  .HasForeignKey(x => x.IdPedidoVenta)
                  .HasConstraintName("FK_Pagos_PV");
