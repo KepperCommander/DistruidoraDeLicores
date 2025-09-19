@@ -1,4 +1,4 @@
-﻿                                                                                                                 using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,14 +37,14 @@ namespace ut_presentacion.Repositorios
         }
 
         [TestMethod]
-        public void Ejecutar()
+        public void EjecutarFlujoPagos()
         {
             try
             {
-                Assert.IsTrue(Guardar(), "Guardar() falló.");
-                Assert.IsTrue(Modificar(), "Modificar() falló.");
-                Assert.IsTrue(Listar(), "Listar() falló.");
-                Assert.IsTrue(Borrar(), "Borrar() falló.");
+                Guardar();
+                Modificar();
+                Listar();
+                Borrar();
             }
             catch (Exception ex)
             {
@@ -52,9 +52,8 @@ namespace ut_presentacion.Repositorios
             }
         }
 
-        private bool Guardar()
+        private void Guardar()
         {
-            // Necesitamos un pedido de venta válido
             var pedido = ctx.PedidosVentas!.AsNoTracking().FirstOrDefault()
                          ?? throw new Exception("No hay pedidos de venta. Inserta uno primero.");
 
@@ -62,7 +61,7 @@ namespace ut_presentacion.Repositorios
             {
                 IdPedidoVenta = pedido.IdPedidoVenta,
                 Fecha = DateTime.Now,
-                Monto = 150000, // valor de prueba
+                Monto = 150000,
                 Medio = "EFECTIVO",
                 Referencia = "PRUEBA-" + Guid.NewGuid().ToString().Substring(0, 6)
             };
@@ -73,11 +72,9 @@ namespace ut_presentacion.Repositorios
             TestContext.WriteLine($"INSERT IdPago = {entidad.IdPago}, filas afectadas = {afectados}");
             Assert.IsTrue(afectados >= 1, "No se insertó ningún pago.");
             Assert.IsTrue(entidad.IdPago > 0, "EF no asignó IdPago.");
-
-            return true;
         }
 
-        private bool Modificar()
+        private void Modificar()
         {
             Assert.IsNotNull(entidad, "Entidad null en Modificar().");
 
@@ -88,11 +85,9 @@ namespace ut_presentacion.Repositorios
 
             TestContext.WriteLine($"UPDATE IdPago = {entidad.IdPago}, filas afectadas = {afectados}");
             Assert.IsTrue(afectados >= 1, "No se actualizó el pago.");
-
-            return true;
         }
 
-        private bool Listar()
+        private void Listar()
         {
             List<Pagos> lista = ctx.Pagos!
                                    .Include(x => x.PedidosVentas)
@@ -100,10 +95,10 @@ namespace ut_presentacion.Repositorios
                                    .ToList();
 
             TestContext.WriteLine($"LISTAR total = {lista.Count}");
-            return lista.Count > 0;
+            Assert.IsTrue(lista.Count > 0, "La lista de pagos está vacía.");
         }
 
-        private bool Borrar()
+        private void Borrar()
         {
             Assert.IsNotNull(entidad, "Entidad null en Borrar().");
 
@@ -115,8 +110,6 @@ namespace ut_presentacion.Repositorios
 
             var eliminado = ctx.Pagos!.AsNoTracking().FirstOrDefault(x => x.IdPago == entidad!.IdPago);
             Assert.IsNull(eliminado, "El pago no se eliminó correctamente.");
-
-            return true;
         }
     }
 }

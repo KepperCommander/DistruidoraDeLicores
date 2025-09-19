@@ -15,6 +15,7 @@ namespace lib_repositorios.Interfaces
         DbSet<PedidosCompras>? PedidosCompras { get; set; }     
         DbSet<PedidosVentas>? PedidosVentas { get; set; }
 
+        DbSet<Clientes>? Clientes { get; set; }
         DbSet<Impuestos>? Impuestos { get; set; }
 
         DbSet<DetallesPedidosCompras>? DetallesPedidosCompras { get; set; }
@@ -22,6 +23,7 @@ namespace lib_repositorios.Interfaces
 
 
         DbSet<Roles>? Roles { get; set; }
+        
 
         EntityEntry<T> Entry<T>(T entity) where T : class;
         int SaveChanges();

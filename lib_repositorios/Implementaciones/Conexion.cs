@@ -92,22 +92,26 @@ namespace lib_repositorios.Implementaciones
             
             });
 
+
            
             model.Entity<Clientes>(e =>
             {
                 e.ToTable("Clientes", "dbo");
                 e.HasKey(x => x.IdCliente);
                 e.Property(x => x.IdCliente).ValueGeneratedOnAdd();
+
                 e.Property(x => x.RazonSocial).IsRequired().HasMaxLength(150);
                 e.Property(x => x.NIT).IsRequired().HasMaxLength(30);
                 e.HasIndex(x => x.NIT).IsUnique();
+
                 e.Property(x => x.Email).HasMaxLength(150);
                 e.Property(x => x.Telefono).HasMaxLength(30);
                 e.Property(x => x.Direccion).HasMaxLength(200);
                 e.Property(x => x.Activo).IsRequired().HasDefaultValue(true);
             });
 
-            
+
+
             model.Entity<CategoriasProductos>(e =>
             {
                 e.ToTable("CategoriasProductos", "dbo");
@@ -278,6 +282,7 @@ namespace lib_repositorios.Implementaciones
 
                 e.Property(x => x.Numero).IsRequired().HasMaxLength(30);
                 e.HasIndex(x => x.Numero).IsUnique();
+                e.Property(x => x.Fecha).IsRequired();
                 e.Property(x => x.Estado).IsRequired().HasMaxLength(20);
 
                 // Relación con Clientes usando la colección inversa
