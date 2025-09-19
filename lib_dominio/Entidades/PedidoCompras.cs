@@ -15,7 +15,7 @@ namespace lib_dominio.Entidades
         public DateTime Fecha { get; set; } = DateTime.Now;
         public string Estado { get; set; } = "ABIERTA";
 
-        public Proveedores Proveedores { get; set; } = null!;
-        public Empleados? Empleados { get; set; }
+        public Proveedores? Proveedor { get; set; }
+        public Empleados? Empleado { get; set; }
     }
 }

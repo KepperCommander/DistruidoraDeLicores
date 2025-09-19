@@ -95,7 +95,7 @@ namespace ut_presentacion.Nucleo
         {
             return new Productos
             {
-                SKU = "P001",
+                Codigo = "P001",
                 Nombre = "Cerveza Águila",
                 IdCategoria = 1,   // debe existir en CategoriaProductos
                 IdImpuesto = 1,    // debe existir en Impuestos

@@ -9,7 +9,7 @@ namespace lib_dominio.Entidades
     public class Productos
     {
         public int IdProducto { get; set; }
-        public string SKU { get; set; } = null!;
+        public string Codigo { get; set; } = null!;
         public string Nombre { get; set; } = null!;
         public int IdCategoria { get; set; }
         public int? IdImpuesto { get; set; }
@@ -18,7 +18,7 @@ namespace lib_dominio.Entidades
         public decimal PrecioLista { get; set; }
         public bool Activo { get; set; } = true;
 
-        public CategoriasProductos CategoriasProductos { get; set; } = null!;
-        public Impuestos? Impuestos { get; set; }
+        public CategoriasProductos Categoria { get; set; } = null!;
+        public Impuestos? Impuesto { get; set; }
     }
 }

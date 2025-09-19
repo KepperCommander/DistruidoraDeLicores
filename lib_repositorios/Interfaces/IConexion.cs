@@ -11,6 +11,16 @@ namespace lib_repositorios.Interfaces
         DbSet<Empleados>? Empleados { get; set; }
         DbSet<Almacenes>? Almacenes { get; set; }
 
+        DbSet<Productos>? Productos { get; set; }
+        DbSet<PedidosCompras>? PedidosCompras { get; set; }     
+        DbSet<PedidoVentas>? PedidosVentas { get; set; }
+
+        DbSet<Impuestos>? Impuestos { get; set; }
+
+        DbSet<DetallesPedidosCompras>? DetallesPedidosCompras { get; set; }
+        DbSet<DetallesPedidosVentas>? DetallesPedidosVentas { get; set; }
+
+
         DbSet<Roles>? Roles { get; set; }
 
         EntityEntry<T> Entry<T>(T entity) where T : class;
