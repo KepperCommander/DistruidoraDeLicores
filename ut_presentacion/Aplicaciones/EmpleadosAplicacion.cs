@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using lib_dominio.Entidades;
 using lib_repositorios.Implementaciones;
 using lib_repositorios.Interfaces;
@@ -16,63 +13,59 @@ namespace ut_presentacion.Repositorios
     [TestClass]
     public class EmpleadosAplicacionPrueba
     {
-        private Conexion ctx = default!;
-        private IDbContextTransaction? trx;
-        private IEmpleadosAplicacion app = default!;
-        private Empleados? entidad;
-
-        public TestContext TestContext { get; set; } = default!;
-
-        [TestInitialize]
-        public void SetUp()
-        {
-            ctx = new Conexion { StringConexion = Configuracion.ObtenerValor("StringConexion") };
-            Assert.IsTrue(ctx.Database.CanConnect(), "No conecta: " + ctx.Database.GetConnectionString());
-            Assert.IsNotNull(ctx.Empleados, "DbSet Empleados es null");
-
-            trx = ctx.Database.BeginTransaction();
-            app = new EmpleadosAplicacion(ctx);
-            app.Configurar(Configuracion.ObtenerValor("StringConexion"));
-        }
-
-        [TestCleanup]
-        public void TearDown()
-        {
-            try { trx?.Rollback(); } catch { }
-            try { trx?.Dispose(); } catch { }
-            try { ctx?.Dispose(); } catch { }
-        }
-
         [TestMethod]
         public void Ejecutar()
         {
-            // Guardar
-            entidad = EntidadesNucleo.Empleados() ?? EmpleadoValido();
-            // Evita choque por email único
-            entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local";
+            Conexion? ctx = null;
+            IDbContextTransaction? trx = null;
+            IEmpleadosAplicacion? app = null;
+            Empleados? entidad = null;
 
-            entidad = app.Guardar(entidad);
-            Assert.IsNotNull(entidad);
-            Assert.IsTrue(entidad!.IdEmpleado > 0);
+            try
+            {
+                
+                ctx = new Conexion { StringConexion = Configuracion.ObtenerValor("StringConexion") };
+                Assert.IsTrue(ctx.Database.CanConnect(), "No conecta: " + ctx.Database.GetConnectionString());
+                Assert.IsNotNull(ctx.Empleados, "DbSet Empleados es null");
+                trx = ctx.Database.BeginTransaction();
 
-            // Modificar
-            entidad.Apellidos += " Actualizado";
-            var mod = app.Modificar(entidad);
-            Assert.IsNotNull(mod);
+                app = new EmpleadosAplicacion(ctx);
+                app.Configurar(Configuracion.ObtenerValor("StringConexion"));
 
-            // Listar + PorRol + PorTexto
-            var lista = app.Listar();
-            Assert.IsTrue(lista.Count > 0);
+                
+                entidad = EntidadesNucleo.Empleados() ?? EmpleadoValido();
+                entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local"; // evita UNIQUE
+                entidad = app.Guardar(entidad);
+                Assert.IsNotNull(entidad);
+                Assert.IsTrue(entidad!.IdEmpleado > 0);
 
-            var porRol = app.PorRol(entidad.IdRol);
-            Assert.IsTrue(porRol.Count > 0);
+                entidad.Apellidos += " Actualizado";
+                Assert.IsNotNull(app.Modificar(entidad));
 
-            var porTexto = app.PorTexto(entidad.Apellidos.Split(' ').First());
-            Assert.IsTrue(porTexto.Count > 0);
+                
+                Assert.IsTrue(app.Listar().Count > 0);
+                Assert.IsTrue(app.PorRol(entidad.IdRol).Count > 0);
+                Assert.IsTrue(app.PorTexto(entidad.Apellidos.Split(' ').First()).Count > 0);
 
-            // Borrar
-            var borr = app.Borrar(entidad);
-            Assert.IsNotNull(borr);
+                
+                Assert.IsNotNull(app.Borrar(entidad));
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                var root = ex.GetBaseException();  // SqlException
+                Assert.Fail(root.Message);         // p.ej.: Invalid column name 'Email'
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.ToString());
+            }
+
+            finally
+            {
+                try { trx?.Rollback(); } catch { }
+                try { trx?.Dispose(); } catch { }
+                try { ctx?.Dispose(); } catch { }
+            }
         }
 
         private static Empleados EmpleadoValido() => new Empleados
@@ -87,3 +80,4 @@ namespace ut_presentacion.Repositorios
         };
     }
 }
+

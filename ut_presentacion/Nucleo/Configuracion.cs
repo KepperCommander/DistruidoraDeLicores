@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using lib_dominio.Nucleo; // para DatosGenerales y JsonConversor
+using lib_dominio.Nucleo; 
 
 namespace ut_presentacion.Nucleo
 {

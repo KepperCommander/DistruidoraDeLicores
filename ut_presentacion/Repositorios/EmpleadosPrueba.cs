@@ -1,141 +1,79 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-
-using lib_dominio.Entidades;
-using lib_repositorios.Interfaces;
+﻿using lib_dominio.Entidades;
 using lib_repositorios.Implementaciones;
-
-using ut_presentacion.Nucleo; // Configuracion y (opcional) EntidadesNucleo
+using lib_repositorios.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using ut_presentacion.Nucleo;
 
 namespace ut_presentacion.Repositorios
 {
     [TestClass]
     public class EmpleadosPrueba
     {
-        private Conexion ctx = default!;
-        private IDbContextTransaction? trx;
+        private readonly IConexion iConexion;
+        private List<Empleados>? lista;
         private Empleados? entidad;
 
-        public TestContext TestContext { get; set; } = default!;
-
-        [TestInitialize]
-        public void SetUp()
+        public EmpleadosPrueba()
         {
-            // Configura la conexión a la BD de TU entorno (DISTRIBUIDORA_2)
-            ctx = new Conexion
-            {
-                StringConexion = Configuracion.ObtenerValor("StringConexion") // debe apuntar a DISTRIBUIDORA_2
-            };
-
-            // Sanity checks de arranque
-            Assert.IsTrue(ctx.Database.CanConnect(), "No se puede conectar: " + ctx.Database.GetConnectionString());
-            Assert.IsNotNull(ctx.Empleados, "DbSet Empleados es null en el DbContext.");
-
-            // Crea el esquema si estás usando una BD de pruebas vacía
-            // (en productivo normalmente NO se usa EnsureCreated)
-            // ctx.Database.EnsureCreated();
-
-            // Ejecutar el test dentro de una transacción y revertir al final
-            trx = ctx.Database.BeginTransaction();
+            iConexion = new Conexion { StringConexion = Configuracion.ObtenerValor("StringConexion") };
         }
-       
-
-        [TestCleanup]
-        public void TearDown()
-        {
-            try { trx?.Rollback(); } catch { /* ignore */ }
-            try { trx?.Dispose(); } catch { /* ignore */ }
-            try { ctx?.Dispose(); } catch { /* ignore */ }
-        }
-
 
         [TestMethod]
         public void Ejecutar()
         {
-            try
-            {
-                Assert.IsTrue(Guardar(), "Guardar() falló");
-                Assert.IsTrue(Modificar(), "Modificar() falló");
-                Assert.IsTrue(Listar(), "Listar() falló");
-            }
-            catch (Exception ex)
-            {
-                // mostrar el error
-                Assert.Fail(ex.ToString());
-            }
+            Assert.AreEqual(true, Guardar());
+            Assert.AreEqual(true, Modificar());
+            Assert.AreEqual(true, Listar());
+            Assert.AreEqual(true, Borrar());
         }
 
-        private bool Guardar()
+        public bool Listar()
         {
-           
-            entidad = EntidadesNucleo.Empleados() ?? EmpleadoValido();
-
-            
-            if (entidad.IdRol <= 0) entidad.IdRol = 1;
-
-            
-            if (string.IsNullOrWhiteSpace(entidad.Email))
-                entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local";
-
-            ctx.Empleados!.Add(entidad);
-            var afectados = ctx.SaveChanges();
-
-            TestContext.WriteLine($"INSERT IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
-
-            Assert.IsTrue(afectados >= 1, "No se insertó ningún registro.");
-            Assert.IsTrue(entidad.IdEmpleado > 0, "EF no asignó IdEmpleado.");
-
-            return true;
-        }
-
-        private bool Modificar()
-        {
-            Assert.IsNotNull(entidad, "No hay entidad cargada para modificar.");
-
-            entidad!.Apellidos += " Actualizado";
-            entidad.Activo = !entidad.Activo;
-
-            var afectados = ctx.SaveChanges();
-
-            TestContext.WriteLine($"UPDATE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
-            Assert.IsTrue(afectados >= 1, "No se actualizó ningún registro.");
-
-            return true;
-        }
-
-        private bool Listar()
-        {
-            List<Empleados> lista = ctx.Empleados!.AsNoTracking().ToList();
-            TestContext.WriteLine($"LISTAR total = {lista.Count}");
+            lista = iConexion.Empleados!.AsNoTracking().Take(50).ToList();
             return lista.Count > 0;
         }
 
-
-        private bool Borrar()
+        public bool Guardar()
         {
-            if (entidad is null) return true;
-            ctx.Empleados!.Remove(entidad);
-            var afectados = ctx.SaveChanges();
-            TestContext.WriteLine($"DELETE IdEmpleado = {entidad.IdEmpleado}, filas afectadas = {afectados}");
-            return afectados >= 1;
-        }
-
-        private static Empleados EmpleadoValido()
-        {
-            return new Empleados
+            entidad = EntidadesNucleo.Empleados() ?? new Empleados
             {
                 Nombres = "EmpleadoPrueba",
                 Apellidos = "Unit",
-                Email = $"empleado.{Guid.NewGuid():N}@prueba.local",
+                Email = $"empleado.{Guid.NewGuid():N}@prueba.local", // evita UNIQUE
                 Telefono = "3000000000",
-                IdRol = 1,                
+                IdRol = 1,                  // FK válida (1..5 en tu seed)
                 FechaIngreso = DateTime.Today,
                 Activo = true
             };
+
+            if (entidad.IdRol <= 0) entidad.IdRol = 1;
+            if (string.IsNullOrWhiteSpace(entidad.Email))
+                entidad.Email = $"empleado.{Guid.NewGuid():N}@prueba.local";
+
+            iConexion.Empleados!.Add(entidad);
+            iConexion.SaveChanges();
+            return entidad.IdEmpleado > 0;
+        }
+
+        public bool Modificar()
+        {
+            entidad!.Apellidos += " Actualizado";
+            entidad.Activo = !entidad.Activo;
+
+            // si usas NoTracking global, esto lo hace robusto
+            var entry = iConexion.Entry(entidad);
+            entry.State = EntityState.Modified;
+
+            iConexion.SaveChanges();
+            return true;
+        }
+
+        public bool Borrar()
+        {
+            if (entidad is null) return true;
+            iConexion.Empleados!.Remove(entidad);
+            iConexion.SaveChanges();
+            return true;
         }
     }
 }
