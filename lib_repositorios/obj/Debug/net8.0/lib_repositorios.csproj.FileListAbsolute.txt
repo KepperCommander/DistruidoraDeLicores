@@ -30,3 +30,19 @@ C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto
 C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_repositorios\obj\Debug\net8.0\refint\lib_repositorios.dll
 C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_repositorios\obj\Debug\net8.0\lib_repositorios.pdb
 C:\Users\usuario1\OneDrive\Documentos\2025 - 2\Programacion de software\Proyecto\Nueva carpeta\lib_repositorios\obj\Debug\net8.0\ref\lib_repositorios.dll
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\bin\Debug\net8.0\lib_repositorios.deps.json
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\bin\Debug\net8.0\lib_repositorios.dll
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\bin\Debug\net8.0\lib_repositorios.pdb
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\bin\Debug\net8.0\lib_dominio.dll
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\bin\Debug\net8.0\lib_dominio.pdb
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.csproj.AssemblyReference.cache
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.AssemblyInfoInputs.cache
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.AssemblyInfo.cs
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.csproj.CoreCompileInputs.cache
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.sourcelink.json
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repo.695687AF.Up2Date
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.dll
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\refint\lib_repositorios.dll
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\lib_repositorios.pdb
+C:\Users\anlly\Source\Repos\Distruidora\lib_repositorios\obj\Debug\net8.0\ref\lib_repositorios.dll

@@ -10,7 +10,7 @@ namespace lib_repositorios.Interfaces
 
         DbSet<Empleados>? Empleados { get; set; }
         DbSet<Almacenes>? Almacenes { get; set; }
-
+        DbSet<CategoriasProductos>? CategoriasProductos { get; set; }
         DbSet<Productos>? Productos { get; set; }
         DbSet<PedidosCompras>? PedidosCompras { get; set; }     
         DbSet<PedidosVentas>? PedidosVentas { get; set; }
@@ -20,7 +20,7 @@ namespace lib_repositorios.Interfaces
 
         DbSet<DetallesPedidosCompras>? DetallesPedidosCompras { get; set; }
         DbSet<DetallesPedidosVentas>? DetallesPedidosVentas { get; set; }
-
+        DbSet<InventariosProductos>? InventariosProductos { get; set; }
 
         DbSet<Roles>? Roles { get; set; }
         
